@@ -21,7 +21,7 @@
 # ==============================================================================
 
 gdtools ANNOTATE \
-  -r /Users/abhisheksinha/Desktop/NSERC/breseq/sequence.gb \
-  -o /Users/abhisheksinha/Desktop/NSERC/breseq/mutation_matrix.html \
+  -r ./sequence.gb \
+  -o ./mutation_matrix.html \
   -f HTML \
-  /Users/abhisheksinha/Desktop/NSERC/breseq/filtered_gd/*.gd
+  ./filtered_gd/*.gd
