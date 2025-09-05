@@ -49,7 +49,7 @@ ax.legend(
 
 # Save legend as a high-resolution PNG
 plt.savefig(
-    "/Users/abhisheksinha/Desktop/NSERC/circos/cef_str_legend.png",
+    "./cef_str_legend.png",
     dpi=600,
     bbox_inches="tight"
 )
