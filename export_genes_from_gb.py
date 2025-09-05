@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # ==============================================================================
 # Title: Export gene coordinates from GenBank file
 # Purpose:
@@ -5,10 +6,10 @@
 #   Output is suitable for downstream visualization (e.g., Circos).
 #
 # Inputs:
-#   - sequence.gb : reference genome in GenBank format
+#   - ./sequence.gb : reference genome in GenBank format
 #
 # Outputs:
-#   - positions_from_gb.csv
+#   - ./positions_from_gb.csv
 #       Columns: chr, start, end, gene
 #       (start/end are 1-based, gene name falls back to locus_tag if missing)
 #
@@ -21,9 +22,13 @@
 
 from Bio import SeqIO
 import csv
+import os
 
-IN_GB  = "/Users/abhisheksinha/Desktop/NSERC/circos/sequence.gb"
-OUT_CSV = "/Users/abhisheksinha/Desktop/NSERC/circos/positions_from_gb.csv"
+# Resolve paths relative to this script's directory (project root)
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+IN_GB = os.path.join(script_dir, "sequence.gb")
+OUT_CSV = os.path.join(script_dir, "positions_from_gb.csv")
 
 # Read reference genome
 record = SeqIO.read(IN_GB, "genbank")
@@ -31,7 +36,7 @@ record = SeqIO.read(IN_GB, "genbank")
 # Open CSV for writing gene coordinates
 with open(OUT_CSV, "w", newline="") as out:
     w = csv.writer(out)
-    # Header row: like BED format but with gene name
+    # Header row
     w.writerow(["chr", "start", "end", "gene"])  
     
     # Iterate over features, keep only CDS annotations
@@ -39,7 +44,7 @@ with open(OUT_CSV, "w", newline="") as out:
         if feat.type != "CDS":
             continue
 
-        # Prefer 'gene', fall back to 'locus_tag' if gene is missing
+        # Prefer 'gene', fall back to 'locus_tag'
         gene  = feat.qualifiers.get("gene", [None])[0]
         locus = feat.qualifiers.get("locus_tag", [None])[0]
         name = gene if gene else locus
@@ -50,7 +55,7 @@ with open(OUT_CSV, "w", newline="") as out:
         start = int(feat.location.start) + 1
         end   = int(feat.location.end)
 
-        # Write row: chromosome ID, start, end, gene name
+        # Write row
         w.writerow([record.id, start, end, name])
 
-print("Wrote", OUT_CSV)
+print(f"✅ Wrote {OUT_CSV}")
