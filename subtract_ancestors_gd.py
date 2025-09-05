@@ -1,6 +1,6 @@
-import os
 import re
 import subprocess
+from pathlib import Path
 
 # ==============================================================================
 # Title: Subtract ancestor mutations from Breseq .gd files
@@ -28,47 +28,47 @@ import subprocess
 #   python subtract_ancestors_gd.py
 # ==============================================================================
 
-base_dir = "/Users/abhisheksinha/Desktop/NSERC/breseq_output"
-output_dir = os.path.join(base_dir, "filtered_gd")
-ah_ancestor = os.path.join(base_dir, "AH_S2/output/output.gd")
-mg_ancestor = os.path.join(base_dir, "MG_S1/output/output.gd")
+BASE_DIR = Path(__file__).resolve().parent / "breseq_output"
+OUTPUT_DIR = BASE_DIR / "filtered_gd"
+AH_ANCESTOR = BASE_DIR / "AH_S2" / "output" / "output.gd"
+MG_ANCESTOR = BASE_DIR / "MG_S1" / "output" / "output.gd"
 
-os.makedirs(output_dir, exist_ok=True)
+OUTPUT_DIR.mkdir(exist_ok=True)
 
-def extract_sample_number(name):
+def extract_sample_number(name: str) -> int | None:
     """Extract the first integer found in the folder name, e.g. 'Cef7' → 7."""
-    match = re.search(r'(\d+)', name)
+    match = re.search(r"(\d+)", name)
     return int(match.group(1)) if match else None
 
 # Loop over all sample folders in breseq_output
-for sample_folder in os.listdir(base_dir):
-    sample_path = os.path.join(base_dir, sample_folder, "output", "output.gd")
-    
-    if not os.path.isfile(sample_path):
+for sample_folder in BASE_DIR.iterdir():
+    sample_path = sample_folder / "output" / "output.gd"
+
+    if not sample_path.is_file():
         # Skip if no Breseq .gd file is found
         continue
 
-    sample_number = extract_sample_number(sample_folder)
+    sample_number = extract_sample_number(sample_folder.name)
     if sample_number is None:
         # Skip if folder name has no number (e.g. AH_S2, MG_S1)
         continue
 
     # Assign correct ancestor based on sample numbering
     if 6 <= sample_number <= 10:
-        ancestor = ah_ancestor
+        ancestor = AH_ANCESTOR
     elif 1 <= sample_number <= 5:
-        ancestor = mg_ancestor
+        ancestor = MG_ANCESTOR
     else:
-        continue 
+        continue
 
     # Define filtered output path
-    output_file = os.path.join(output_dir, f"{sample_folder}.gd")
-    print(f"Subtracting {os.path.basename(ancestor)} from {sample_folder} → {output_file}")
-    
+    output_file = OUTPUT_DIR / f"{sample_folder.name}.gd"
+    print(f"Subtracting {ancestor.name} from {sample_folder.name} → {output_file}")
+
     # Run gdtools SUBTRACT: removes shared mutations between sample and ancestor
     subprocess.run([
         "gdtools", "SUBTRACT",
-        "-o", output_file,
-        sample_path,
-        ancestor
+        "-o", str(output_file),
+        str(sample_path),
+        str(ancestor)
     ])
