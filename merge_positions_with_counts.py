@@ -32,12 +32,13 @@ import sys
 import pandas as pd
 from pathlib import Path
 
-# ====== CONFIG: edit paths if needed ======
-GB_POSITIONS_CSV = "/Users/abhisheksinha/Desktop/NSERC/circos/positions_from_gb.csv"
-GROUPED_COUNTS_CSV = "/Users/abhisheksinha/Desktop/NSERC/circos/grouped_mutations.csv"
-OUT_CSV = "/Users/abhisheksinha/Desktop/NSERC/circos/circos_heatmap_all.csv"
-OUT_TSV = "/Users/abhisheksinha/Desktop/NSERC/circos/circos_heatmap_all.tsv"
-# =========================================
+# ====== CONFIG: relative to script location ======
+BASE_DIR = Path(__file__).resolve().parent
+GB_POSITIONS_CSV = BASE_DIR / "positions_from_gb.csv"
+GROUPED_COUNTS_CSV = BASE_DIR / "grouped_mutations.csv"
+OUT_CSV = BASE_DIR / "circos_heatmap_all.csv"
+OUT_TSV = BASE_DIR / "circos_heatmap_all.tsv"
+# ================================================
 
 def pick_gene_label_column(df: pd.DataFrame) -> str:
     """Heuristically select the column that contains gene labels."""
