@@ -29,7 +29,7 @@ import matplotlib.pyplot as plt
 # ==============================================================================
 
 # Load gene × condition mutation count matrix
-data = pd.read_csv('/Users/abhisheksinha/Desktop/NSERC/breseq/upset_plots/grouped_mutations.csv', index_col=0)
+data = pd.read_csv("grouped_mutations.csv", index_col=0)
 
 # Convert to dictionary format: {condition: [genes with mutations]}
 contents = {}
@@ -40,10 +40,7 @@ for col in data.columns:
 upset_data = from_contents(contents)
 
 # Save expanded intersection table for downstream reference
-upset_data.reset_index().to_csv(
-    "/Users/abhisheksinha/Desktop/NSERC/breseq/upset_plots/intersection_data.csv",
-    index=False
-)
+upset_data.reset_index().to_csv("intersection_data.csv", index=False)
 
 # Create and save UpSet plot
 UpSet(
@@ -54,10 +51,7 @@ UpSet(
     sort_categories_by='-input' # order categories (columns) by input order
 ).plot()
 
-plt.savefig(
-    '/Users/abhisheksinha/Desktop/NSERC/breseq/upset_plots/upset_plot.svg',
-    format='svg'
-)
+plt.savefig("upset_plot.svg", format="svg")
 plt.show()
 
 # To explore options:
