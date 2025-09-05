@@ -19,9 +19,9 @@
 #   - Skips any sample directories missing output/output.gd
 # ==============================================================================
 
-# Define base directories
-BRESEQ_DIR="/Users/abhisheksinha/Desktop/NSERC/breseq/breseq_output"
-DEST_DIR="/Users/abhisheksinha/Desktop/NSERC/breseq/filtered_gd"
+# Define base directories (relative to project root)
+BRESEQ_DIR="$project_root/breseq_output"
+DEST_DIR="$project_root/filtered_gd"
 
 # Create the destination folder if it doesn't exist
 mkdir -p "$DEST_DIR"
